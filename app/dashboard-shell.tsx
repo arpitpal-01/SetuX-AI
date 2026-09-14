@@ -27,18 +27,22 @@ const services = [
 
 function Status({ children, tone }: { children: React.ReactNode; tone: string }) { return <span className={`status ${tone}`}><span className="status-dot" />{children}</span>; }
 
-export function DashboardShell({ initialView = "overview" }: { initialView?: View }) {
+export function DashboardShell({ initialView = "overview", requiredRole }: { initialView?: View; requiredRole?: "USER" | "OFFICER" | "ADMIN" }) {
   const [view, setView] = useState<View>(initialView); const [menuOpen, setMenuOpen] = useState(false);
   const [liveApplications, setLiveApplications] = useState(applications);
   const router = useRouter(); const { profile, loading, configured, signOut } = useAuth();
   useEffect(() => {
     if (loading) return;
     if (!configured || !profile) { if (configured) router.replace("/auth"); return; }
+    if (requiredRole && profile.role !== requiredRole) {
+      router.replace(profile.role === "ADMIN" ? "/dashboard/admin" : profile.role === "OFFICER" ? "/dashboard/officer" : "/dashboard/user");
+      return;
+    }
     if (initialView === "officer" && profile.role !== "OFFICER") router.replace(profile.role === "ADMIN" ? "/dashboard/admin" : "/dashboard/user");
     if (initialView === "admin" && profile.role !== "ADMIN") router.replace(profile.role === "OFFICER" ? "/dashboard/officer" : "/dashboard/user");
     if (profile.role === "OFFICER" && initialView === "overview") setView("officer");
     if (profile.role === "ADMIN" && initialView === "overview") setView("admin");
-  }, [configured, initialView, loading, profile, router]);
+  }, [configured, initialView, loading, profile, requiredRole, router]);
   useEffect(() => {
     const client = supabase;
     if (!client || !profile) return;
@@ -57,6 +61,7 @@ export function DashboardShell({ initialView = "overview" }: { initialView?: Vie
   if (loading) return <div className="loading-screen"><Sparkles size={20} /> Loading your secure workspace...</div>;
   if (!configured) return <div className="loading-screen"><ShieldCheck size={22} /><div><strong>Supabase setup required</strong><span>Add your Supabase URL and anonymous key to .env.local, then restart the app.</span><button className="primary-btn" onClick={() => router.push("/auth")}>Open sign in</button></div></div>;
   if (!profile) return <div className="loading-screen"><Sparkles size={20} /> Redirecting to sign in...</div>;
+  if (requiredRole && profile.role !== requiredRole) return <div className="loading-screen"><ShieldCheck size={20} /> Opening your {profile.role.toLowerCase()} portal...</div>;
   const displayName = profile.full_name || "Citizen"; const isUser = profile.role === "USER";
   const go = (next: View) => { setView(next); setMenuOpen(false); };
   return <div className="app-shell">

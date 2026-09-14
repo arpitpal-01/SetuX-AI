@@ -31,7 +31,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setSession(nextSession);
       if (!nextSession) { setProfile(null); setLoading(false); return; }
       const { data } = await client.from("profiles").select("id, full_name, email, role, department_id").eq("id", nextSession.user.id).single();
-      if (mounted) { setProfile(data as Profile | null); setLoading(false); }
+      if (mounted) {
+        const nextProfile = data as Profile | null;
+        setProfile(nextProfile ? { ...nextProfile, role: String(nextProfile.role).trim().toUpperCase() as Role } : null);
+        setLoading(false);
+      }
     };
     client.auth.getSession().then(({ data }) => loadProfile(data.session));
     const { data: listener } = client.auth.onAuthStateChange((_event, nextSession) => { void loadProfile(nextSession); });

@@ -1,5 +1,5 @@
 import { DashboardShell } from "../../dashboard-shell";
 
 export default function OfficerDashboard() {
-  return <DashboardShell initialView="officer" />;
+  return <DashboardShell initialView="officer" requiredRole="OFFICER" />;
 }
