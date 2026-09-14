@@ -38,6 +38,8 @@ Then run `supabase/seed_demo.sql` in the Supabase SQL Editor. It promotes the ac
 
 Run `supabase/migrations/002_government_service_catalog.sql` after the first migration. It adds the requested ten services: Birth, Caste, Income, Residential/Domicile, Death, Disability, Character, Legal Heir, Ration Card, and Senior Citizen Certificate/ID. It also adds Revenue, Civil Registration, Social Welfare, Health, Police, and Food & Civil Supplies departments plus official-link labels and service requirements.
 
+Run `supabase/migrations/003_realtime_workflow.sql` after the first migration to enable Supabase Realtime for applications and application events. Citizen, officer, and admin dashboards then refresh together when an application is submitted, assigned, or completed.
+
 For a full department demo, create two Auth users for each department using the emails listed in that migration, then rerun it. The updates promote those profiles to `OFFICER` and assign their departments. Auth user creation must remain in Supabase Auth; the public browser client must never receive a service-role key.
 
 ## Production follow-up
