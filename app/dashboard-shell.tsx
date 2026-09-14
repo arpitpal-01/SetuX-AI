@@ -40,14 +40,16 @@ export function DashboardShell({ initialView = "overview" }: { initialView?: Vie
     if (profile.role === "ADMIN" && initialView === "overview") setView("admin");
   }, [configured, initialView, loading, profile, router]);
   useEffect(() => {
-    if (!supabase || !profile) return;
+    const client = supabase;
+    if (!client || !profile) return;
     let active = true;
     const loadApplications = async () => {
-      const query = profile.role === "USER" ? supabase.from("applications").select("application_number, status, submitted_at, updated_at, services(name), departments(name)").eq("user_id", profile.id).order("updated_at", { ascending: false }) : supabase.from("applications").select("application_number, status, submitted_at, updated_at, services(name), departments(name)").order("updated_at", { ascending: false }).limit(20);
+      const query = profile.role === "USER" ? client.from("applications").select("application_number, status, submitted_at, updated_at, services(name), departments(name)").eq("user_id", profile.id).order("updated_at", { ascending: false }) : client.from("applications").select("application_number, status, submitted_at, updated_at, services(name), departments(name)").order("updated_at", { ascending: false }).limit(20);
       const { data } = await query;
       if (!active || !data) return;
-      const rows = data as Array<{ application_number: string; status: string; submitted_at: string | null; updated_at: string; services: { name: string } | null; departments: { name: string } | null }>;
-      setLiveApplications(rows.map((row) => ({ id: row.application_number, service: row.services?.name || "Government service", date: row.submitted_at ? new Date(row.submitted_at).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) : "Draft", status: row.status.replaceAll("_", " ").toLowerCase().replace(/\b\w/g, (letter) => letter.toUpperCase()), tone: row.status === "COMPLETED" ? "green" : row.status === "VALIDATION_REQUIRED" ? "amber" : "blue", department: row.departments?.name || "Unassigned" })));
+      const rows = data as Array<{ application_number: string; status: string; submitted_at: string | null; updated_at: string; services: { name: string } | { name: string }[] | null; departments: { name: string } | { name: string }[] | null }>;
+      const relationName = (relation: { name: string } | { name: string }[] | null) => Array.isArray(relation) ? relation[0]?.name : relation?.name;
+      setLiveApplications(rows.map((row) => ({ id: row.application_number, service: relationName(row.services) || "Government service", date: row.submitted_at ? new Date(row.submitted_at).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) : "Draft", status: row.status.replaceAll("_", " ").toLowerCase().replace(/\b\w/g, (letter) => letter.toUpperCase()), tone: row.status === "COMPLETED" ? "green" : row.status === "VALIDATION_REQUIRED" ? "amber" : "blue", department: relationName(row.departments) || "Unassigned" })));
     };
     void loadApplications();
     return () => { active = false; };

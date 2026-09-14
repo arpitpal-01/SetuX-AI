@@ -23,17 +23,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!supabase) { setLoading(false); return; }
+    const client = supabase;
+    if (!client) { setLoading(false); return; }
     let mounted = true;
     const loadProfile = async (nextSession: Session | null) => {
       if (!mounted) return;
       setSession(nextSession);
       if (!nextSession) { setProfile(null); setLoading(false); return; }
-      const { data } = await supabase.from("profiles").select("id, full_name, email, role, department_id").eq("id", nextSession.user.id).single();
+      const { data } = await client.from("profiles").select("id, full_name, email, role, department_id").eq("id", nextSession.user.id).single();
       if (mounted) { setProfile(data as Profile | null); setLoading(false); }
     };
-    supabase.auth.getSession().then(({ data }) => loadProfile(data.session));
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, nextSession) => { void loadProfile(nextSession); });
+    client.auth.getSession().then(({ data }) => loadProfile(data.session));
+    const { data: listener } = client.auth.onAuthStateChange((_event, nextSession) => { void loadProfile(nextSession); });
     return () => { mounted = false; listener.subscription.unsubscribe(); };
   }, []);
 
