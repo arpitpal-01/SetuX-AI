@@ -15,14 +15,14 @@ const demoPassword = "SetuXDemo2026!";
 
 export default function AuthPage() {
   const router = useRouter();
-  const { session } = useAuth();
+  const { session, profile } = useAuth();
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
-  useEffect(() => { if (session) router.replace("/dashboard/user"); }, [router, session]);
+  useEffect(() => { if (session && profile) router.replace(profile.role === "ADMIN" ? "/dashboard/admin" : profile.role === "OFFICER" ? "/dashboard/officer" : "/dashboard/user"); }, [profile, router, session]);
 
   const fillDemo = (email: string) => {
     const emailInput = document.querySelector<HTMLInputElement>('input[name="email"]');
@@ -47,7 +47,7 @@ export default function AuthPage() {
       const text = result.error.message.toLowerCase();
       setError(text.includes("invalid api key") ? "Supabase rejected the API key. Update .env.local with the current public key." : result.error.message);
     } else if (mode === "signup") setMessage("Account created. Check your email if confirmation is enabled, then sign in.");
-    else router.replace("/dashboard/user");
+    else if (result.data.user) router.replace("/dashboard/user");
     setLoading(false);
   };
 
