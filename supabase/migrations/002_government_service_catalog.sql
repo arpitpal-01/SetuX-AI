@@ -14,16 +14,16 @@ on conflict (name) do update set description = excluded.description;
 
 with catalog(name, department, description, official_link, required_documents, required_fields) as (
   values
-    ('Birth Certificate', 'Civil Registration', 'Birth registration and certified copy', 'Birth & Death Services', '["Hospital Record","Identity Proof"]'::jsonb, '["Name","Date of Birth","Place of Birth"]'::jsonb),
-    ('Caste Certificate', 'Revenue Department', 'Caste and community certificate', 'Caste Certificate Services', '["Identity Proof","Address Proof","Supporting Certificate"]'::jsonb, '["Name","Address","Caste Category"]'::jsonb),
-    ('Income Certificate', 'Revenue Department', 'Proof of annual income', 'Income Certificate Services', '["Identity Proof","Address Proof","Income Proof"]'::jsonb, '["Name","Address","Annual Income"]'::jsonb),
-    ('Residential / Domicile Certificate', 'Revenue Department', 'Proof of residence or domicile', 'Domicile Services', '["Identity Proof","Address Proof"]'::jsonb, '["Name","Address","Years of Residence"]'::jsonb),
-    ('Death Certificate', 'Civil Registration', 'Death registration and certified copy', 'Death Certificate Services', '["Medical Record","Identity Proof"]'::jsonb, '["Name","Date of Death","Place of Death"]'::jsonb),
-    ('Disability Certificate', 'Health Department', 'Disability assessment and certification', 'Disability Services', '["Identity Proof","Medical Report"]'::jsonb, '["Name","Disability Type","Disability Percentage"]'::jsonb),
-    ('Character Certificate', 'Police Department', 'Police character and verification certificate', 'Character Certificate Services', '["Identity Proof","Address Proof"]'::jsonb, '["Name","Address","Purpose"]'::jsonb),
-    ('Legal Heir Certificate', 'Revenue Department', 'Legal heir verification certificate', 'Legal Heir Services', '["Identity Proof","Death Certificate","Family Proof"]'::jsonb, '["Name","Deceased Name","Relationship"]'::jsonb),
-    ('Ration Card Application', 'Food & Civil Supplies', 'New or updated ration card application', 'Government Services Portal', '["Identity Proof","Address Proof","Family Details"]'::jsonb, '["Head of Family","Address","Family Members"]'::jsonb),
-    ('Senior Citizen Certificate / ID', 'Social Welfare', 'Senior citizen certificate and identity card', 'Government Services Portal', '["Identity Proof","Age Proof","Address Proof"]'::jsonb, '["Name","Date of Birth","Address"]'::jsonb)
+    ('Birth Certificate', 'Civil Registration', 'Birth registration and certified copy', 'https://services.india.gov.in/?utm_source=chatgpt.com', '["Hospital Record","Identity Proof"]'::jsonb, '["Name","Date of Birth","Place of Birth"]'::jsonb),
+    ('Caste Certificate', 'Revenue Department', 'Caste and community certificate', 'https://services.india.gov.in/?utm_source=chatgpt.com', '["Identity Proof","Address Proof","Supporting Certificate"]'::jsonb, '["Name","Address","Caste Category"]'::jsonb),
+    ('Income Certificate', 'Revenue Department', 'Proof of annual income', 'https://services.india.gov.in/?utm_source=chatgpt.com', '["Identity Proof","Address Proof","Income Proof"]'::jsonb, '["Name","Address","Annual Income"]'::jsonb),
+    ('Residential / Domicile Certificate', 'Revenue Department', 'Proof of residence or domicile', 'https://services.india.gov.in/?utm_source=chatgpt.com', '["Identity Proof","Address Proof"]'::jsonb, '["Name","Address","Years of Residence"]'::jsonb),
+    ('Death Certificate', 'Civil Registration', 'Death registration and certified copy', 'https://services.india.gov.in/?utm_source=chatgpt.com', '["Medical Record","Identity Proof"]'::jsonb, '["Name","Date of Death","Place of Death"]'::jsonb),
+    ('Disability Certificate', 'Health Department', 'Disability assessment and certification', 'https://services.india.gov.in/?utm_source=chatgpt.com', '["Identity Proof","Medical Report"]'::jsonb, '["Name","Disability Type","Disability Percentage"]'::jsonb),
+    ('Character Certificate', 'Police Department', 'Police character and verification certificate', 'https://services.india.gov.in/?utm_source=chatgpt.com', '["Identity Proof","Address Proof"]'::jsonb, '["Name","Address","Purpose"]'::jsonb),
+    ('Legal Heir Certificate', 'Revenue Department', 'Legal heir verification certificate', 'https://services.india.gov.in/?utm_source=chatgpt.com', '["Identity Proof","Death Certificate","Family Proof"]'::jsonb, '["Name","Deceased Name","Relationship"]'::jsonb),
+    ('Ration Card Application', 'Food & Civil Supplies', 'New or updated ration card application', 'https://services.india.gov.in/?utm_source=chatgpt.com', '["Identity Proof","Address Proof","Family Details"]'::jsonb, '["Head of Family","Address","Family Members"]'::jsonb),
+    ('Senior Citizen Certificate / ID', 'Social Welfare', 'Senior citizen certificate and identity card', 'https://services.india.gov.in/?utm_source=chatgpt.com', '["Identity Proof","Age Proof","Address Proof"]'::jsonb, '["Name","Date of Birth","Address"]'::jsonb)
 )
 insert into public.services (department_id, name, description, official_link, required_documents, required_fields)
 select d.id, c.name, c.description, c.official_link, c.required_documents, c.required_fields

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Activity, AlertCircle, ArrowLeft, ArrowUpRight, Bell, BriefcaseBusiness, Check, CheckCircle2, ChevronDown, ClipboardCheck, Clock3, FileCheck2, FileText, FolderKanban, Inbox, LayoutDashboard, Menu, MoreHorizontal, Plus, Search, Settings, ShieldCheck, Sparkles, UploadCloud, Users, RefreshCw, UserCheck, ListFilter } from "lucide-react";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../lib/auth-context";
+import { MultiServiceApplicationForm as VerifiedApplicationForm } from "../components/multi-service-application-form";
 
 type View = "overview" | "applications" | "new-application" | "officer" | "admin";
 const applications = [
@@ -73,7 +74,7 @@ export function DashboardShell({ initialView = "overview", requiredRole }: { ini
       <div className="sidebar-bottom"><div className="mini-profile"><div className="avatar">{displayName.slice(0, 2).toUpperCase()}</div><div><strong>{displayName}</strong><small>{profile.role.toLowerCase()} account</small></div><button aria-label="Sign out" onClick={() => void signOut()}><MoreHorizontal size={16} /></button></div><button className="secure-note" onClick={() => void signOut()}><ShieldCheck size={14} /> Sign out securely</button></div>
     </aside>
     <main className="main-content"><header className="topbar"><button className="mobile-menu" onClick={() => setMenuOpen(!menuOpen)}><Menu size={20} /></button><div className="crumb"><span>{profile.role === "USER" ? "Citizen portal" : profile.role === "OFFICER" ? "Officer workspace" : "Admin console"}</span><span>/</span><strong>{view === "new-application" ? "New application" : view === "overview" ? "Overview" : view === "applications" ? "My applications" : view === "officer" ? "Officer workspace" : "Admin overview"}</strong></div><div className="top-actions"><button className="icon-button" onClick={() => window.alert("Search is available from the application list.")}><Search size={18} /></button><button className="icon-button notification" onClick={() => window.alert("No new notifications.")}><Bell size={18} /><i /></button><div className="top-avatar">{displayName.slice(0, 2).toUpperCase()}</div><ChevronDown size={15} /></div></header>
-      {view === "new-application" ? <MultiServiceApplicationForm go={go} userId={profile.id} /> : view === "officer" ? <OfficerOperationsView profileId={profile.id} /> : view === "admin" ? <AdminOperationsView /> : <Overview view={view} go={go} displayName={displayName} apps={liveApplications} />}</main>
+      {view === "new-application" ? <VerifiedApplicationForm go={go} userId={profile.id} /> : view === "officer" ? <OfficerOperationsView profileId={profile.id} /> : view === "admin" ? <AdminOperationsView /> : <Overview view={view} go={go} displayName={displayName} apps={liveApplications} />}</main>
   </div>;
 }
 

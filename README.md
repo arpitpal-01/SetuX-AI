@@ -40,6 +40,8 @@ Run `supabase/migrations/002_government_service_catalog.sql` after the first mig
 
 Run `supabase/migrations/003_realtime_workflow.sql` after the first migration to enable Supabase Realtime for applications and application events. Citizen, officer, and admin dashboards then refresh together when an application is submitted, assigned, or completed.
 
+Run `supabase/migrations/004_citizen_verification_insert.sql` after the catalog migration. The citizen form now uses the selected service's required fields and required document list, validates every value and upload locally, saves each document with its checklist type, and records the passed submission checks for officer review.
+
 For a full department demo, create two Auth users for each department using the emails listed in that migration, then rerun it. The updates promote those profiles to `OFFICER` and assign their departments. Auth user creation must remain in Supabase Auth; the public browser client must never receive a service-role key.
 
 ## Production follow-up
