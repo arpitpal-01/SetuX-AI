@@ -111,11 +111,15 @@ if u is not null and o is not null and a is not null then
   insert into public.applications(application_number,user_id,service_id,department_id,assigned_officer_id,status,priority,classification_confidence,submitted_at) values('SETUX-DEMO-0001',u,svc,dep,o,'UNDER_REVIEW','HIGH',96,now()-interval '2 days') on conflict(application_number) do update set assigned_officer_id=excluded.assigned_officer_id,status=excluded.status;
   select id into app from public.applications where application_number='SETUX-DEMO-0001';
   insert into public.application_extracted_data(application_id,extracted_json,confidence) values(app,'{"name":"Rahul Sharma","address":"Ludhiana, Punjab","annual_income":"240000"}',96) on conflict(application_id) do nothing;
-  insert into public.application_validation_results(application_id,is_valid,missing_fields,missing_documents,warnings) values(app,true,'[]','[]','["Final decision remains with officer"]') on conflict(application_id) do nothing;
+  insert into public.application_validation_results(application_id,is_valid,missing_fields,missing_documents,warnings) values(app,true,'[]','[]','["Final decision remains with admin"]') on conflict(application_id) do nothing;
   insert into public.officer_assignments(application_id,officer_id,assigned_by,reason) values(app,o,a,'Correct department and lowest workload') on conflict(application_id,officer_id) do nothing;
   insert into public.application_events(application_id,event_type,description,created_by) values(app,'UNDER_REVIEW','Officer began review',o) on conflict do nothing;
 end if; end $$;
 commit;
+
+-- After this setup, run these migrations in order in Supabase SQL Editor:
+-- 1. supabase/migrations/005_admin_assignment_and_verification.sql
+-- 2. supabase/migrations/006_workload_sla_and_staffing.sql
 
 -- Auth demo users must be created in Supabase Authentication with:
 -- demo.citizen@setux.test / SetuXDemo2026!
