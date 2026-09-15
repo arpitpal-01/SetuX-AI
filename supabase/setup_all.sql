@@ -120,6 +120,7 @@ commit;
 -- After this setup, run these migrations in order in Supabase SQL Editor:
 -- 1. supabase/migrations/005_admin_assignment_and_verification.sql
 -- 2. supabase/migrations/006_workload_sla_and_staffing.sql
+-- 3. supabase/migrations/007_automatic_work_distribution.sql
 
 -- Auth demo users must be created in Supabase Authentication with:
 -- demo.citizen@setux.test / SetuXDemo2026!
